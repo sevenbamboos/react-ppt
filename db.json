@@ -1,0 +1,39 @@
+{
+  "articles": [
+    {
+      "id": 1,
+      "title": "First Try",
+      "author": "Test",
+      "pages": [
+        {
+          "id": 1,
+          "title": "First Page",
+          "contents": "This is the first page"
+        },
+        {
+          "id": 2,
+          "title": "Second Page",
+          "contents": "This is the second page"
+        },
+        {
+          "id": 3,
+          "title": "Third Page",
+          "contents": "This is the last page"
+        }
+      ]
+    },
+
+    {
+      "id": 2,
+      "title": "A Short Break",
+      "author": "Test",
+      "pages": [
+        {
+          "id": 1,
+          "title": "Playground",
+          "contents": "Under construction"
+        }
+      ]
+    }
+  ]
+}
