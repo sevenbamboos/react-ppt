@@ -3,3 +3,26 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+#ArticleList {
+  margin: 2em;
+  padding: 4em;
+  background: yellowgreen;
+  color: white;
+}
+
+#ArticleList ul {
+  list-style: square;
+}
+
+#ArticleEditor {
+  margin: 2em;
+  padding: 4em;
+  background: yellowgreen;
+  color: white;
+}
+
+#ArticleEditor .Editor {
+  background: darkgreen;
+  padding: 2em;
+}
