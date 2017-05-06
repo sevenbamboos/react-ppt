@@ -20,25 +20,39 @@ const ArticleFinder = (props) => {
 
 const ArticleResultItem = (props) => {
   return (
-    <li>
-      <span class="strong">
+    <tr>
+      <td>
         <Link to={`/articles/${props.article.id}`}>
           {props.article.title}
         </Link>
-      </span>
-      {` by ${props.article.author} `}
-      <button type="button" className="close"><span aria-hidden="true">&times;</span></button>
-    </li>
+      </td>
+      <td>
+        {props.article.author}
+      </td>
+      <td>
+        <button type="button" className="close"><span aria-hidden="true">&times;</span></button>
+      </td>
+    </tr>
   );
 }
 
 const ArticleResult = (props) => {
   return (
-    <ol>
+    <table className="table table-responsive">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr><td colSpan="3">Article count:{props.articles.length}</td></tr>
+      </tfoot>
       {props.articles.map(x=>{
         return (<ArticleResultItem key={x.id} article={x} />);
       })}
-    </ol>
+    </table>
   );
 };
 

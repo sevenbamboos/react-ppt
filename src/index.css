@@ -22,7 +22,11 @@ body {
   color: white;
 }
 
+#ArticleEditor .Chapter {
+  padding: 2em;
+  margin: 2em;
+}
+
 #ArticleEditor .Editor {
-  background: darkgreen;
   padding: 2em;
 }

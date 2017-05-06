@@ -37,7 +37,7 @@ export default class ArticleEditor extends Component {
       <div id="ArticleEditor" className="container">
         <div className="row">
 
-          <div className="col-3">
+          <div className="col-3, Chapter">
             <ol>
               {this.state.article.pages.map(p=>
                 <li key={p.id} value={p.id} onClick={this.handlePageClick}>{p.title}</li>
