@@ -49,14 +49,24 @@ const ArticleResult = (props) => {
       <tfoot>
         <tr><td colSpan="3">Article count:{props.articles.length}</td></tr>
       </tfoot>
-      {props.articles.map(x=>{
-        return (<ArticleResultItem key={x.id} article={x} />);
-      })}
+      <tbody>
+        {props.articles.map(x=>{
+          return (<ArticleResultItem key={x.id} article={x} />);
+        })}
+      </tbody>
     </table>
   );
 };
 
 export default class ArticleList extends Component {
+
+  filterArticleTitle = x=>x.title.indexOf(this.state.searchKeyword) !== -1;
+
+  fetchFromRemote = filterAction => {
+    const resolve = x=> this.setState({articles: x.filter(filterAction)});
+    const error = y=>console.error("Failed to fetch articles.", y);
+    Util.fetchJSON('/articles', resolve, error);
+  };
 
   constructor(props) {
     super(props);
@@ -70,7 +80,7 @@ export default class ArticleList extends Component {
   }
 
   componentDidMount() {
-    this.fetchFromRemote(this.filterArticleTitlet);
+    this.fetchFromRemote(this.filterArticleTitle);
   }
 
   handleSearchKeywordChange(event) {
@@ -92,14 +102,6 @@ export default class ArticleList extends Component {
       console.error(`Not supported event:${eventName}`);
     }
   }
-
-  filterArticleTitle = x=>x.title.indexOf(this.state.searchKeyword) != -1;
-
-  fetchFromRemote = filterAction => {
-    const resolve = x=> this.setState({articles: x.filter(filterAction)});
-    const error = y=>console.error("Failed to fetch articles.", y);
-    Util.fetchJSON('/articles', resolve, error);
-  };
 
   render() {
     return (
