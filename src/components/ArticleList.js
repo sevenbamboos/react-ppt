@@ -70,9 +70,7 @@ export default class ArticleList extends Component {
   }
 
   componentDidMount() {
-    const resolve = x=>this.setState({articles: x});
-    const error = y=>console.error("Failed to fetch articles.", y);
-    Util.fetchJSON('/articles', resolve, error);
+    this.fetchFromRemote(this.filterArticleTitlet);
   }
 
   handleSearchKeywordChange(event) {
@@ -86,12 +84,22 @@ export default class ArticleList extends Component {
     const eventName = event.target.name;
     if (eventName === "search") {
       console.log("Search article with:", this.state.searchKeyword);
+      this.fetchFromRemote(this.filterArticleTitle);
+
     } else if (eventName === "add") {
       console.log("Create article");
     } else {
       console.error(`Not supported event:${eventName}`);
     }
   }
+
+  filterArticleTitle = x=>x.title.indexOf(this.state.searchKeyword) != -1;
+
+  fetchFromRemote = filterAction => {
+    const resolve = x=> this.setState({articles: x.filter(filterAction)});
+    const error = y=>console.error("Failed to fetch articles.", y);
+    Util.fetchJSON('/articles', resolve, error);
+  };
 
   render() {
     return (
