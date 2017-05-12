@@ -22,7 +22,6 @@
         }
       ]
     },
-
     {
       "id": 2,
       "title": "A Short Break",
@@ -33,7 +32,15 @@
           "title": "Playground",
           "contents": "Under construction"
         }
-      ]
+      ],
+      "{\"author\": \"Not Me\"}": "",
+      "author:": ""
+    },
+    {
+      "title": "New Article",
+      "author": "Unknown",
+      "pages": [],
+      "id": 3
     }
   ]
 }

@@ -26,7 +26,7 @@ export default class ArticleEditor extends Component {
   componentDidMount() {
     const resolve = x=>this.setState({article: x});
     const error = y=>console.error("Failed to load article.", y);
-    Util.fetchJSON(`/articles/${this.props.match.params.id}`, resolve, error);
+    Util.getJSON(`/articles/${this.props.match.params.id}`, resolve, error);
   }  
 
   render() {

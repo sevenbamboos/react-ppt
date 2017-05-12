@@ -62,10 +62,17 @@ export default class ArticleList extends Component {
 
   filterArticleTitle = x=>x.title.indexOf(this.state.searchKeyword) !== -1;
 
-  fetchFromRemote = filterAction => {
-    const resolve = x=> this.setState({articles: x.filter(filterAction)});
-    const error = y=>console.error("Failed to fetch articles.", y);
-    Util.fetchJSON('/articles', resolve, error);
+  getArticles = filterAction => {
+    const resolve = allArticles => this.setState({articles: allArticles.filter(filterAction)});
+    const error = y=>console.error("Failed to get articles.", y);
+    Util.getJSON('/articles', resolve, error);
+  };
+
+  createArticle = filterAction => {
+    const resolve = savedArticle => this.setState({articles: [...this.state.articles, savedArticle]});
+    const error = y=>console.error("Failed to create article.", y);
+    const newArticle = {"title":"New Article", "author":"Unknown", "pages": []};
+    Util.postJSON('/articles', newArticle, resolve, error);
   };
 
   constructor(props) {
@@ -80,7 +87,7 @@ export default class ArticleList extends Component {
   }
 
   componentDidMount() {
-    this.fetchFromRemote(this.filterArticleTitle);
+    this.getArticles(this.filterArticleTitle);
   }
 
   handleSearchKeywordChange(event) {
@@ -94,10 +101,12 @@ export default class ArticleList extends Component {
     const eventName = event.target.name;
     if (eventName === "search") {
       console.log("Search article with:", this.state.searchKeyword);
-      this.fetchFromRemote(this.filterArticleTitle);
+      this.getArticles(this.filterArticleTitle);
 
     } else if (eventName === "add") {
       console.log("Create article");
+      this.createArticle();
+
     } else {
       console.error(`Not supported event:${eventName}`);
     }
