@@ -19,6 +19,12 @@ const ArticleFinder = (props) => {
 };
 
 const ArticleResultItem = (props) => {
+
+  const localOnDelete = (event) => {
+    props.onDelete(props.article.id);
+    event.preventDefault();
+  };
+
   return (
     <tr>
       <td>
@@ -30,7 +36,7 @@ const ArticleResultItem = (props) => {
         {props.article.author}
       </td>
       <td>
-        <button type="button" className="close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" className="close" onClick={localOnDelete}><span aria-hidden="true">&times;</span></button>
       </td>
     </tr>
   );
@@ -51,7 +57,7 @@ const ArticleResult = (props) => {
       </tfoot>
       <tbody>
         {props.articles.map(x=>{
-          return (<ArticleResultItem key={x.id} article={x} />);
+          return (<ArticleResultItem key={x.id} article={x} onDelete={props.onDeleteArticle} />);
         })}
       </tbody>
     </table>
@@ -68,11 +74,24 @@ export default class ArticleList extends Component {
     Util.getJSON('/articles', resolve, error);
   };
 
-  createArticle = filterAction => {
+  createArticle = () => {
     const resolve = savedArticle => this.setState({articles: [...this.state.articles, savedArticle]});
     const error = y=>console.error("Failed to create article.", y);
     const newArticle = {"title":"New Article", "author":"Unknown", "pages": []};
     Util.postJSON('/articles', newArticle, resolve, error);
+  };
+
+  deleteArticle = articleID => {
+    const index = this.state.articles.findIndex(element => element.id === articleID);
+    let newArticles;
+    if (index === -1) {
+      newArticles = this.state.articles;
+    } else {
+      newArticles = this.state.articles.slice(0, index).concat(this.state.articles.slice(index+1, this.state.articles.length));
+    }
+    const resolve = Article => this.setState({articles: newArticles});
+    const error = y=>console.error("Failed to delete article.", y);
+    Util.deleteJSON(`/articles/${articleID}`, resolve, error);
   };
 
   constructor(props) {
@@ -84,6 +103,7 @@ export default class ArticleList extends Component {
 
     this.handleArticleSearchSubmit = this.handleArticleSearchSubmit.bind(this);
     this.handleSearchKeywordChange = this.handleSearchKeywordChange.bind(this);
+    this.handleDeleteArticle = this.handleDeleteArticle.bind(this);
   }
 
   componentDidMount() {
@@ -94,6 +114,11 @@ export default class ArticleList extends Component {
     this.setState({
       searchKeyword: event.target.value,
     });
+  }
+
+  handleDeleteArticle(articleID) {
+    if (articleID)
+      this.deleteArticle(articleID);
   }
 
   handleArticleSearchSubmit(event) {
@@ -124,7 +149,7 @@ export default class ArticleList extends Component {
             onSubmit={this.handleArticleSearchSubmit} />
         </div>
         <div className="row">
-          <ArticleResult articles={this.state.articles} />
+          <ArticleResult onDeleteArticle={this.handleDeleteArticle} articles={this.state.articles} />
         </div>
       </div>
     );
