@@ -20,7 +20,8 @@ class ArticleFinder extends Component {
   }
 
   openCreateArticleModal() {
-    this.setState({isCreateArticleModalOn: true});
+    //this.setState({isCreateArticleModalOn: true});
+    this.props.onCreateArticle(this.state.newArticleTitle, this.state.newArticleAuthor);
   }
 
   closeCreateArticleModal() {
@@ -46,7 +47,7 @@ class ArticleFinder extends Component {
             <h1>Creat?</h1>
             <button onClick={this.closeCreateArticleModal}>Close</button>
           </Modal>
-          </div>
+      </div>
     );
   }
 }
