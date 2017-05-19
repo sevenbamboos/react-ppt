@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
-import Modal from 'react-modal';
+
+import Modal from 'antd/lib/modal';
+import 'antd/lib/modal/style/css';
 
 import { Link } from 'react-router-dom';
 
 import Util from '../util';
+
+const defaultNewArticleTitle = "New Article";
+const defaultNewArticleAuthor = "New Author";
 
 class ArticleFinder extends Component {
 
@@ -11,27 +16,42 @@ class ArticleFinder extends Component {
     super(props);
     this.state = {
       isCreateArticleModalOn: false,
-      newArticleTitle: "New Article",
-      newArticleAuthor: "New Author",
+      newArticleTitle: defaultNewArticleTitle,
+      newArticleAuthor: defaultNewArticleAuthor,
     };
-
-    this.openCreateArticleModal = this.openCreateArticleModal.bind(this);
-    this.closeCreateArticleModal = this.closeCreateArticleModal.bind(this);
   }
 
-  openCreateArticleModal() {
-    //this.setState({isCreateArticleModalOn: true});
+  handleCreateArticleModalEditing = (e) => {
+    this.setState({[e.target.name]: e.target.value});
+  };
+
+  openCreateArticleModal = (e) => {
+    e.preventDefault();
+    this.setState({isCreateArticleModalOn: true});
+  };
+
+  submitCreateArticleModal = (e) => {
+
+    if (!this.state.newArticleAuthor || !this.state.newArticleTitle) {
+      console.warn("Title or author can't be empty.");
+      return;
+    }
+
+    this.closeCreateArticleModal(e);
     this.props.onCreateArticle(this.state.newArticleTitle, this.state.newArticleAuthor);
-  }
+  };
 
-  closeCreateArticleModal() {
-    this.setState({isCreateArticleModalOn: false});
-    this.props.onCreateArticle(this.state.newArticleTitle, this.state.newArticleAuthor);
-  }
+  closeCreateArticleModal = (e) => {
+    e.preventDefault();
+    this.setState({
+      isCreateArticleModalOn: false,
+      newArticleTitle: defaultNewArticleTitle,
+      newArticleAuthor: defaultNewArticleAuthor,
+    });
+  };
 
   render() {
     return (
-      <div>
       <form className="form-horizontal">
         <div className="form-group">
           <input value={this.props.keyword} onChange={this.props.onKeywordChange} name="keyword" placeholder="Search article" className="form-control" />
@@ -39,15 +59,20 @@ class ArticleFinder extends Component {
         <div className="form-group">
           <button name="search" onClick={this.props.onSubmit} className="btn btn-primary">Search</button>
           <button name="add" onClick={this.openCreateArticleModal} className="btn btn-link">Add</button>
+          <Modal title="Create Article" visible={this.state.isCreateArticleModalOn}
+            onOk={this.submitCreateArticleModal} onCancel={this.closeCreateArticleModal}
+          >
+            <form className="form-horizontal">
+              <div className="form-group">
+                <input value={this.state.newArticleTitle} name="newArticleTitle" required onChange={this.handleCreateArticleModalEditing} placeholder="Title" className="form-control" />
+              </div>
+              <div className="form-group">
+                <input value={this.state.newArticleAuthor} name="newArticleAuthor" required onChange={this.handleCreateArticleModalEditing} placeholder="Author" className="form-control" />
+              </div>
+            </form>
+          </Modal>
         </div>
       </form>
-          <Modal isOpen={this.state.isCreateArticleModalOn}
-            contentLabel="Create Article"
-          >
-            <h1>Creat?</h1>
-            <button onClick={this.closeCreateArticleModal}>Close</button>
-          </Modal>
-      </div>
     );
   }
 }
